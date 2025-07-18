@@ -61,8 +61,6 @@ const extractDomainInfo = (whoisData) => {
   const expirationDate = whoisRecord.expiresDate || registryData.expiresDate;
   const nameServers = whoisRecord.nameServers?.hostNames || registryData.nameServers?.hostNames || [];
 
-  console.log(JSON.stringify(whoisData, null, 2));
-
   return {
     domainName,
     registrar,
@@ -73,11 +71,10 @@ const extractDomainInfo = (whoisData) => {
   };
 };
 
-
 // Helper function to extract contact information
 const extractContactInfo = (whoisData) => {
   const registryData = whoisData.registryData || {};
-  const whoisRecord = whoisData.whoisRecord || {};
+  const whoisRecord = whoisData.WhoisRecord || {};
   
   // Try to get contact data from multiple sources
   const registrant = registryData.registrant || whoisRecord.registrant || {};
@@ -140,6 +137,12 @@ app.get('/api/whois', async (req, res) => {
     const response = await axios.get(whoisUrl, { params });
     const whoisData = response.data;
     
+    // Add debug logging to see the structure
+    console.log('Whois API Response Keys:', Object.keys(whoisData));
+    if (whoisData.WhoisRecord) {
+      console.log('WhoisRecord Keys:', Object.keys(whoisData.WhoisRecord));
+    }
+    
     // Check if the API returned an error
     if (whoisData.ErrorMessage) {
       return res.status(400).json({
@@ -151,9 +154,11 @@ app.get('/api/whois', async (req, res) => {
     // Extract and return the requested information
     if (type === 'domain') {
       const domainInfo = extractDomainInfo(whoisData);
+      console.log('Extracted domain info:', domainInfo);
       res.json(domainInfo);
     } else {
       const contactInfo = extractContactInfo(whoisData);
+      console.log('Extracted contact info:', contactInfo);
       res.json(contactInfo);
     }
     
