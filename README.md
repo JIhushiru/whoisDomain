@@ -110,9 +110,34 @@ npm run dev
 The React app will run at:
 
 ```
-http://localhost:3000
+http://localhost:5173
+```
+> *(or check your terminal for the exact port Vite is using — usually it's `5173`, `5174`, etc.)*
+---
+### Run Both Servers Simultaneously
+
+You must run **both servers at the same time** in separate terminals. Start from the source folder.
+
+**Terminal 1 – Backend**
+
+```bash
+cd backend
+npm start
 ```
 
+**Terminal 2 – Frontend**
+
+```bash
+cd frontend
+npm run dev
+```
+
+Once both are running, open your browser to:
+
+```
+http://localhost:5173
+```
+> *(or check your terminal for the exact port Vite is using — usually it's `5173`, `5174`, etc.)*
 ---
 
 
