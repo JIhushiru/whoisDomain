@@ -87,11 +87,11 @@ const extractContactInfo = (whoisData) => {
                       administrativeContact.email || 
                       whoisRecord.contactEmail || 
                       'Not available';
-  
+
   return {
-    registrantName: registrant.name || registrant.organization || 'Not available',
+    registrantName: registrant.organization || 'Not available',
     technicalContactName: technicalContact.name || technicalContact.organization || 'Not available',
-    administrativeContactName: administrativeContact.name || administrativeContact.organization || 'Not available',
+    administrativeContactName: administrativeContact.organization || 'Not available',
     contactEmail
   };
 };
