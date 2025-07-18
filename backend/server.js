@@ -54,15 +54,15 @@ const formatDate = (dateString) => {
 // Helper function to extract domain information
 const extractDomainInfo = (whoisData) => {
   const registryData = whoisData.registryData || {};
-  const whoisRecord = whoisData.whoisRecord || {};
-  
-  // Try to get data from multiple sources
+  const whoisRecord = whoisData.WhoisRecord || {};
   const domainName = whoisRecord.domainName || registryData.domainName || 'Unknown';
-  const registrar = registryData.registrarName || whoisRecord.registrarName || 'Unknown';
-  const registrationDate = registryData.registrationDate || whoisRecord.registrationDate;
-  const expirationDate = registryData.expirationDate || whoisRecord.expirationDate;
-  const nameServers = registryData.nameServers || whoisRecord.nameServers || [];
-  
+  const registrar = whoisRecord.registrarName || registryData.registrarName || 'Unknown';
+  const registrationDate = whoisRecord.createdDate || registryData.createdDate;
+  const expirationDate = whoisRecord.expiresDate || registryData.expiresDate;
+  const nameServers = whoisRecord.nameServers?.hostNames || registryData.nameServers?.hostNames || [];
+
+  console.log(JSON.stringify(whoisData, null, 2));
+
   return {
     domainName,
     registrar,
@@ -72,6 +72,7 @@ const extractDomainInfo = (whoisData) => {
     hostnames: formatHostnames(nameServers)
   };
 };
+
 
 // Helper function to extract contact information
 const extractContactInfo = (whoisData) => {
@@ -212,7 +213,6 @@ app.use((error, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
-  
   if (!process.env.WHOIS_API_KEY) {
     console.warn(' WARNING: WHOIS_API_KEY environment variable is not set');
   }
